@@ -97,7 +97,8 @@
     </div>
 
     <script>
-        const correctCodes = ["RISE", "PH1", "7049", "0429", "3933", "8042"];
+        // Принимаем как PH1, так и PH-1
+        const correctCodes = ["RISE", "PH1", "PH-1", "7049", "0429", "3933", "8042"];
         
         // Шифр Цезаря +3
         function caesarEncrypt(text, shift = 3) {
@@ -130,7 +131,10 @@
                 document.getElementById("code6").value.trim().toUpperCase()
             ];
             
-            const allCodesEntered = correctCodes.every(code => 
+            // Проверяем с учетом PH1/PH-1
+            const allCodesEntered = correctCodes.some(code => 
+                enteredCodes.includes("PH1") || enteredCodes.includes("PH-1")
+            ) && ["RISE", "7049", "0429", "3933", "8042"].every(code => 
                 enteredCodes.includes(code)
             );
             
@@ -142,7 +146,7 @@
                     document.getElementById("result").style.opacity = "1";
                     document.getElementById("result").innerHTML = `
                         <p>▛▀▀▀▀▀▀▀▀▀▀▀▀▀▜</p>
-                        <p>▌ ФИНАЛЬНЫЙ ШИФР ▐</p>
+                        <p>▌ ФИНАЛЬНЫЙ ШИФР (Цезарь +3) ▐</p>
                         <div class="cipher-text">${encryptedTgUrl}</div>
                         <p>▙▄▄▄▄▄▄▄▄▄▄▄▄▄▟</p>
                     `;
