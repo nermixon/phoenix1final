@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>ФЕНИКС-1|ФИНАЛ</title>
+    <title>ФЕНИКС-1 | ФИНАЛ</title>
     <style>
         body {
             background-color: #000;
@@ -51,8 +51,12 @@
             margin-top: 30px;
             font-size: 1.2rem;
             min-height: 100px;
-            opacity: 0;
-            transition: opacity 1s;
+            word-break: break-all;
+        }
+        #error {
+            color: #ff5555;
+            margin-top: 10px;
+            display: none;
         }
         .progress-bar {
             height: 2px;
@@ -66,19 +70,16 @@
             width: 0%;
             transition: width 3s;
         }
-        .cipher-text {
-            color: #0ff;
-            font-family: monospace;
-            letter-spacing: 1px;
-            margin: 10px 0;
-            word-break: break-all;
+        .success-message {
+            color: #0f0;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div id="container">
         <h1>ФИНАЛЬНАЯ АКТИВАЦИЯ</h1>
-        <p>Введите все полученные коды:</p>
+        <p>Введите все 6 полученных кодов (порядок не важен):</p>
         
         <input type="text" class="code-input" placeholder="Код 1" id="code1">
         <input type="text" class="code-input" placeholder="Код 2" id="code2">
@@ -88,6 +89,7 @@
         <input type="text" class="code-input" placeholder="Код 6" id="code6">
         
         <button onclick="activate()">АКТИВИРОВАТЬ</button>
+        <div id="error">Неверно</div>
         
         <div class="progress-bar" id="progress">
             <div class="progress" id="progress-bar"></div>
@@ -98,30 +100,15 @@
 
     <script>
         // Обязательные коды
-        const requiredCodes = new Set(["RISE", "PH-1", "hei1tp", "7049", "0429", "15201520"]);
+        const requiredCodes = ["RISE", "PH-1", "hei1tp", "7049", "0429", "15201520"];
 
-        // Шифр Цезаря +3 с сохранением регистра
-        function caesarEncrypt(text, shift = 3) {
-            return text.split('').map(char => {
-                const code = char.charCodeAt(0);
-                if (code >= 65 && code <= 90) {
-                    return String.fromCharCode(((code - 65 + shift) % 26 + 65);
-                } 
-                if (code >= 97 && code <= 122) {
-                    return String.fromCharCode(((code - 97 + shift) % 26 + 97);
-                }
-                if (code >= 48 && code <= 57) {
-                    return String.fromCharCode(((code - 48 + shift) % 10 + 48);
-                }
-                return char;
-            }).join('');
-        }
-
-        // Ссылка с сохранением регистра
+        // Ссылка на Telegram
         const tgUrl = "https://t.me/+doXIN0sqpS8wY2I6";
-        const encryptedTgUrl = caesarEncrypt(tgUrl);
 
         function activate() {
+            const errorElement = document.getElementById("error");
+            errorElement.style.display = "none";
+            
             const enteredCodes = [
                 document.getElementById("code1").value.trim(),
                 document.getElementById("code2").value.trim(),
@@ -129,29 +116,25 @@
                 document.getElementById("code4").value.trim(),
                 document.getElementById("code5").value.trim(),
                 document.getElementById("code6").value.trim()
-            ].filter(code => code !== "");
+            ];
 
-            // Проверка всех кодов
+            // Проверка кодов
             const isValid = enteredCodes.length === 6 && 
-                          new Set(enteredCodes).size === 6 &&
-                          Array.from(requiredCodes).every(code => 
-                              enteredCodes.includes(code));
+                         requiredCodes.every(code => enteredCodes.includes(code)) &&
+                         new Set(enteredCodes).size === 6;
 
             if (isValid) {
                 document.getElementById("progress").style.display = "block";
                 document.getElementById("progress-bar").style.width = "100%";
                 
                 setTimeout(() => {
-                    document.getElementById("result").style.opacity = "1";
                     document.getElementById("result").innerHTML = `
-                        <p>▛▀▀▀▀▀▀▀▀▀▀▀▀▀▜</p>
-                        <p>▌ ФИНАЛЬНЫЙ ШИФР ▐</p>
-                        <div class="cipher-text">${encryptedTgUrl}</div>
-                        <p>▙▄▄▄▄▄▄▄▄▄▄▄▄▄▟</p>
+                        <p class="success-message">Активация успешна!</p>
+                        <div>${tgUrl}</div>
                     `;
-                }, 3000);
+                }, 1000);
             } else {
-                alert("Неверные коды. Требуются: RISE, PH-1, hei1tp, 7049, 0429, 15201520");
+                errorElement.style.display = "block";
             }
         }
         
