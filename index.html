@@ -116,9 +116,9 @@
             }).join('');
         }
 
-        // Реальная ссылка (зашифрованная)
-        const realUrl = "https://nermixon.github.io/phoenix-final/";
-        const encryptedUrl = caesarEncrypt(realUrl.toLowerCase());
+        // Зашифрованная ссылка на Telegram
+        const tgUrl = "https://t.me/+doXIN0sqpS8wY2I6";
+        const encryptedTgUrl = caesarEncrypt(tgUrl.toLowerCase());
 
         function activate() {
             const enteredCodes = [
@@ -143,10 +143,8 @@
                     document.getElementById("result").innerHTML = `
                         <p>▛▀▀▀▀▀▀▀▀▀▀▀▀▀▜</p>
                         <p>▌ ФИНАЛЬНЫЙ ШИФР ▐</p>
-                        <p>▌ (Цезарь +3) ▐</p>
-                        <div class="cipher-text">${encryptedUrl}</div>
+                        <div class="cipher-text">${encryptedTgUrl}</div>
                         <p>▙▄▄▄▄▄▄▄▄▄▄▄▄▄▟</p>
-                        <p style="margin-top:20px">Расшифруйте ссылку для доступа к архивам</p>
                     `;
                 }, 3000);
             } else {
