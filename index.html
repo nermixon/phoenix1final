@@ -78,7 +78,7 @@
 <body>
     <div id="container">
         <h1>ФИНАЛЬНАЯ АКТИВАЦИЯ</h1>
-        <p>Введите все полученные коды:</p>
+        <p>Введите все полученные коды (порядок не важен):</p>
         
         <input type="text" class="code-input" placeholder="Код 1" id="code1">
         <input type="text" class="code-input" placeholder="Код 2" id="code2">
@@ -97,9 +97,11 @@
     </div>
 
     <script>
-        // Принимаем как PH1, так и PH-1
-        const correctCodes = ["RISE", "PH1", "PH-1", "7049", "0429", "3933", "8042"];
-        
+        // Все допустимые коды (PH1 и PH-1 оба валидны)
+        const validCodes = new Set(["RISE", "PH1", "PH-1", "7049", "0429", "3933", "8042"]);
+        // Коды, которые должны быть введены (PH1/PH-1 считаются одним кодом)
+        const requiredCodes = new Set(["RISE", "PH1", "7049", "0429", "3933", "8042"]);
+
         // Шифр Цезаря +3
         function caesarEncrypt(text, shift = 3) {
             return text.split('').map(char => {
@@ -129,16 +131,20 @@
                 document.getElementById("code4").value.trim().toUpperCase(),
                 document.getElementById("code5").value.trim().toUpperCase(),
                 document.getElementById("code6").value.trim().toUpperCase()
-            ];
+            ].filter(code => code !== "");
+
+            // Проверяем что все введенные коды валидны
+            const allValid = enteredCodes.every(code => validCodes.has(code));
             
-            // Проверяем с учетом PH1/PH-1
-            const allCodesEntered = correctCodes.some(code => 
-                enteredCodes.includes("PH1") || enteredCodes.includes("PH-1")
-            ) && ["RISE", "7049", "0429", "3933", "8042"].every(code => 
-                enteredCodes.includes(code)
-            );
-            
-            if (allCodesEntered) {
+            // Проверяем что все обязательные коды присутствуют (PH1 или PH-1)
+            const hasAllRequired = 
+                enteredCodes.includes("PH1") || enteredCodes.includes("PH-1") &&
+                ["RISE", "7049", "0429", "3933", "8042"].every(code => 
+                    enteredCodes.includes(code)
+                ) &&
+                enteredCodes.length >= 6;
+
+            if (allValid && hasAllRequired) {
                 document.getElementById("progress").style.display = "block";
                 document.getElementById("progress-bar").style.width = "100%";
                 
@@ -152,7 +158,7 @@
                     `;
                 }, 3000);
             } else {
-                alert("Не все коды введены или есть ошибки");
+                alert("Проверьте введенные коды:\n- Должны быть все 6 кодов\n- PH1/PH-1 считаются за один код");
             }
         }
         
